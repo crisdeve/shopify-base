@@ -1,0 +1,48 @@
+<ul>
+{% for link in linklists[linklist].links %}
+  {% if link.links != blank %}
+    <li>
+      <button>
+        {{ link.title }}
+      </button>
+      <div data-active="false" class="dropdown">
+        <ul>
+          {% for childlink in link.links %}
+            <li>
+              <a 
+                href="{{ childlink.url }}"
+                title="{{ childlink.title }}"
+              >
+                {{ childlink.title }}
+              </a>
+              {% if childlink.links != blank %}
+                <ul>
+                  {% for grandchildlink in childlink.links %}
+                    <li>
+                      <a 
+                        href="{{ grandchildlink.url }}"
+                        title="{{ grandchildlink.title }}"
+                      >
+                        {{ grandchildlink.title }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </li>
+  {% else %}
+    <li>
+      <a 
+        href="{{ link.url }}"
+        title="{{ link.title }}"
+      >
+        {{ link.title }}
+      </a>
+    </li>
+  {% endif %}
+{% endfor %}
+</ul>

@@ -1,0 +1,40 @@
+{
+  "current": "Default",
+  "presets": {
+    "Default": {
+      "colors_solid_button_labels": "#FFFFFF",
+      "colors_accent_1": "#121212",
+      "colors_accent_2": "#334FB4",
+      "colors_text": "#121212",
+      "colors_outline_button_labels": "#121212",
+      "colors_background_1": "#FFFFFF",
+      "colors_background_2": "#F3F3F3",
+      "sections": {
+      }
+    },
+    "Craft": {
+      "colors_solid_button_labels": "#EFECEC",
+      "colors_accent_1": "#2A332F",
+      "colors_accent_2": "#476154",
+      "colors_text": "#1C1A1A",
+      "colors_outline_button_labels": "#7B8382",
+      "colors_background_1": "#EFECEC",
+      "colors_background_2": "#C1BCAE",
+      "sections": {
+        "footer": {
+          "type": "footer",
+          "settings": {
+          },
+          "blocks": {
+            "menu": {
+              "type": "link_list"
+            }
+          },
+          "block_order": [
+            "menu"
+          ]
+        }
+      }
+    }
+  }
+}

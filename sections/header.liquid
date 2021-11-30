@@ -1,0 +1,50 @@
+{% liquid
+  assign logo = section.settings.logo | append: '.svg' | file_url
+%}
+{%- capture alt_logo -%}Logo {{ shop.name }}{%- endcapture -%}
+
+<div>
+  <div>
+    <a href="{{ routes.root_url }}">
+      {% if logo != blank %}
+        {% render "render-image"
+          class: "",
+          img_src: logo,
+          alt: alt_logo,
+          width: "100",
+          height: "100"
+        %}
+      {% else %}
+        {{ shop.name }}
+      {% endif %}
+    </a>
+  </div>
+  <nav>
+    {% render 'site-nav'
+      linklist: section.settings.menu
+    %}
+  </nav>
+  <div>
+    {% render 'user-nav' %}
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo",
+      "label": "t:sections.header.settings.logo.label"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "t:sections.header.settings.menu.label"
+    }
+  ]
+}
+{% endschema %}

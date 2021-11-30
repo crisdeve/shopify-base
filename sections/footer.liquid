@@ -1,0 +1,167 @@
+<div>
+  {% for block in section.blocks %}
+    {% case block.type %}
+
+      {% when "link_list" %}
+        <div>
+          {% if block.settings.heading != blank %}
+            <span>{{ block.settings.heading }}</span>
+          {% endif %}
+          {% if block.settings.menu != blank %}
+            <ul>
+              {% for link in linklists[block.settings.menu].links %}
+                <li>
+                  <a
+                    href="{{ link.url }}"
+                    title="{{ link.title }}">
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+
+      {% when "newslatter" %}
+        <div>
+          {% if block.settings.newsletter_heading != blank %}
+            <span>
+              {{ block.settings.newsletter_heading }}
+            </span>
+          {% endif %}
+          {% if block.settings.newsletter_sub != blank %}
+            <span>
+              {{ block.settings.newsletter_sub }}
+            </span>
+          {% endif %}
+          {%- form 'customer', id: 'ContactFooter' -%}
+            <input
+              type="hidden"
+              name="contact[tags]"
+              value="newsletter"
+            >
+              
+            <input
+              id="NewsletterForm--{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              aria-required="true"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="email"
+              {% if form.errors %}
+                autofocus
+                aria-invalid="true"
+                aria-describedby="ContactFooter-error"
+              {% elsif form.posted_successfully? %}
+                aria-describedby="ContactFooter-success"
+              {% endif %}
+              placeholder="{{ 'newsletter.label' | t }}"
+              required
+            >
+
+            <button
+              type="submit"
+              name="commit"
+              id="Subscribe"
+              aria-label="{{ 'newsletter.button_label' | t }}"
+            >
+              {{ 'newsletter.button_label' | t }}
+            </button>
+              
+            {%- if form.errors -%}
+              <small id="ContactFooter-error">
+                {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+              </small>
+            {%- endif -%}
+            
+            {%- if form.posted_successfully? -%}
+              <h3
+                id="ContactFooter-success"
+                tabindex="-1"
+                autofocus
+              >
+                {{ 'newsletter.success' | t }}
+              </h3>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+
+    {% endcase %}
+  {% endfor %}
+  
+  <div>
+    {% if section.settings.sub_footer != blank %}
+      <span>
+        {{ section.settings.sub_footer }}
+      </span>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.footer.name",
+  "tag": "footer",
+  "class": "footer",
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "t:sections.footer.blocks.link_list.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Quick links",
+          "label": "t:sections.footer.blocks.link_list.settings.heading.label",
+          "info": "t:sections.footer.blocks.link_list.settings.heading.info"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "default": "footer",
+          "label": "t:sections.footer.blocks.link_list.settings.menu.label",
+          "info": "t:sections.footer.blocks.link_list.settings.menu.info"
+        }
+      ]
+    },
+    {
+      "type": "newslatter",
+      "name": "t:sections.footer.settings.header__1.content",
+      "settings": [
+        {
+          "type": "text",
+          "id": "newsletter_heading",
+          "default": "Subscribe to our emails",
+          "label": "t:sections.footer.settings.newsletter_heading.label"
+        },
+        {
+          "type": "text",
+          "id": "newsletter_sub",
+          "default": "Subscribe to receive special offers, free gifts and unique deals",
+          "label": "Sub-heading newslatter"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "sub_footer",
+      "default": "Gradiweb ©",
+      "label": "t:sections.footer.blocks.text.name"
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "link_list"
+      },
+      {
+        "type": "newslatter"
+      }
+    ]
+  }
+}
+{% endschema %}
