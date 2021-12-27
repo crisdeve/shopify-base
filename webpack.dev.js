@@ -1,6 +1,15 @@
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common.js");
 
+const shoulAnalyze = process.argv.includes('--analyze');
+
+const plugins = [];
+
+if (shoulAnalyze) {
+  const { BundleAnalyzerPlugin } = module.require('webpack-bundle-analyzer');
+  plugins.push(new BundleAnalyzerPlugin());
+}
+
 /** @type {import("webpack").Configuration}  */
 
 const devConfig = {
@@ -24,7 +33,8 @@ const devConfig = {
         ],
       },
     ]
-  }
+  },
+  plugins,
 }
 
 module.exports = merge(common, devConfig);
