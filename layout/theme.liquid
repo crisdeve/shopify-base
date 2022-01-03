@@ -26,7 +26,7 @@
     {% render 'meta-tags' %}
 
     {{ content_for_header }}
-    
+
     {% render 'color-variables' %}
 
     <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
@@ -38,7 +38,7 @@
     </a>
 
     {% section 'header' %}
-    
+
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
@@ -48,7 +48,7 @@
     <ul hidden>
       <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
     </ul>
-
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
     <script>
       window.shopUrl = '{{ shop.url }}';
       window.routes = {

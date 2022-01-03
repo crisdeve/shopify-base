@@ -1,128 +1,121 @@
 import axios from 'axios';
 
 /**
-* Client for the Shopify API.
+* Client for the Shopify API
 */
 class API {
 
   /**
   * Add products to cart
-  * @param {Object} items – Products to add
-  * @returns {Object} Line items associated with the added items
+  * @param {object} items – Products to add
+  * @param {string} sectionId – ID of the section that will get the HTML markup
+  * @returns {object} Line items associated with the added items and sections
   */
-  async addToCart(items) {
-    let formData = {
+  async addToCart(items, sectionId) {
+    const formData = {
       items: items,
-    }
+      sections: sectionId,
+    };
 
     try {
-      const response = await fetch(`${routes.cart_add_url}.js`, {
+      const { data } = await axios({
         method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData),
-      })
-      const data = await response.json()
-      return data
+        url: `${routes.cart_add_url}.js`,
+        data: JSON.stringify(formData),
+      });
+      return data;
     } catch (error) {
-      console.error(`Error: ${error.message}`)
+      console.error(`Error: ${error.message}`);
     }
   }
 
   /**
   * Update the cart's line item quantities
-  * @param {Object} config – Contains the product variant and
-  * the quantity to update
+  * @param {{
+  *   id: number,
+  *   quantity: number,
+  *   sectionId: string
+  * }} config – Contains the product variant,
+  * the quantity and section to update
   */
   async updateCart(config) {
-    const { id, quantity } = config
+    const {
+      id,
+      quantity,
+      sectionId,
+    } = config;
 
-    let formData = {
+    const formData = {
       updates: {
         [id]: quantity,
       },
-    }
+      sections: sectionId,
+    };
 
     try {
-      const response = await fetch(`${routes.cart_update_url}.js`, {
+      const { data } = await axios({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
-      })
-      const data = await response.json()
-      return data
+        url: `${routes.cart_update_url}.js`,
+        data: JSON.stringify(formData),
+      });
+      return data;
     } catch (error) {
-      console.error(`Error: ${error.message}`)
-    }
-  }
-
-  /**
-  * Change the cart's line item quantities.
-  * @param  {Object} config – Identify the line item to be
-  * changed and quantities
-  */
-  async changeCart(config) {
-    try {
-      const response = await fetch(`${routes.cart_change_url}.js`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(config),
-      })
-      const data = await response.json()
-      return data
-    } catch (error) {
-      console.error(`Error: ${error.message}`)
+      console.error(`Error: ${error.message}`);
     }
   }
 
   /**
   * Update a specific section with the use of Section Rendering API
-  * @param {String} sectionId – Section ID.
-  * @returns {Object} Section ID and its corresponding rendered HTML
+  * @param {string} sectionId – Section ID
+  * @returns {object} Section ID and its corresponding rendered HTML
   */
   async updateShopifySection(sectionId) {
     try {
-      const response = await fetch(`?section_id=${sectionId}`)
-      const content = await response.text()
-      return content
+      const {
+        data: html
+      } = await axios.get(`?section_id=${sectionId}`);
+      return html;
     } catch (error) {
-      console.error(`Error: ${error.message}`)
+      console.error(`Error: ${error.message}`);
     }
   }
 
   /**
-  * It is used to recommend related products for a specific product.
-  * @param {String} id – Product ID.
-  * @param {Number} limit – Limits the number of results.
-  * @returns {Object} Product Recommendations.
+  * It is used to recommend related products for a specific product
+  * @param {string} id – Product ID
+  * @param {number} limit – Limits the number of results
+  * @param {string} sectionId – section with which product
+  *   recommendations will be rendered
+  * @returns {string} HTML from a section rendered with
+  *   product recommendations
   */
-  async getRecommendedProducts(id, limit) {
+  async getRecommendedProducts(id, limit, sectionId) {
     try {
-      const url = `/recommendations/products?section_id=suggested-product&product_id=${id}&limit=${limit}`
-      const response = await fetch(url)
-      const html = await response.text()
-      return html
+      const url = `/recommendations/products?section_id=${sectionId}&product_id=${id}&limit=${limit}`;
+      const { data: html } = await axios.get(url);
+      return html;
     } catch (error) {
-      console.error(`Error: ${error.message}`)
+      console.error(`Error: ${error.message}`);
     }
   }
 
   /**
   * Get data from a resource
-  * @param  {string} url – The path of the resource to obtain.
+  * @param {string} url – The path of the resource to obtain
+  * @returns {object} Data from a resource
   */
   async read(url) {
     try {
-      const response = await fetch(url)
-      const data = await response.json()
-      return data
+      const { data } = await axios.get(url);
+      return data;
     } catch (error) {
-      console.log(error.message)
+      console.error(`Error: ${error.message}`);
     }
   }
 }
